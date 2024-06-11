@@ -133,4 +133,57 @@ const login = async (req, res) => {
     })
 }
 
-module.exports = { register, login }
+const token = async (req, res) => {
+    const { name, email } = req;
+    const user = {
+        name,
+        email
+    }
+
+    //create JWT
+    const accesToken = jwt.sign(user, process.env.ACCES_TOKEN_KEY, {expiresIn: '1hr'});
+    return res.status(200).send({
+        code: '200',
+        status: 'success',
+        data: {
+            accesToken: accesToken
+        }
+    })
+}
+
+const logout = async (req, res) => {
+    const refreshToken = req.refreshToken;
+    try{
+        const result = await knex('tokens').where('token', refreshToken).del();
+
+        if(result == 1){
+            return res.status(200).send({
+                code: '200',
+                status: 'succes',
+                data:{
+                    message: 'Sign out success'
+                }
+            })
+        }
+    }catch(err){
+        return res.status(500).send({
+            code: '500',
+            status: 'Internal Server Error',
+            errors:{
+                message: 'An error occurred while fetching data'
+            }
+        })
+    }
+}
+
+const getSymptoms = async (req, res) => {
+    const symptoms = await knex('symptoms').select('*');
+
+    return res.status(200).json({
+        code: '200',
+        status: 'ok',
+        symptoms : symptoms
+    })
+}
+
+module.exports = { register, login, token, logout, getSymptoms }
