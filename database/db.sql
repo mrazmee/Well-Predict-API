@@ -43,7 +43,6 @@ INSERT INTO symptoms (symptom) VALUES
 ('burning micturition'),
 ('chest pain'),
 ('chills'),
-('Yellowish skin'),
 ('cold hands and feets'),
 ('coma'),
 ('congestion'),
